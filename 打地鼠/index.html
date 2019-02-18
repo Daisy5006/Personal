@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>打地鼠</title>
+	<style type="text/css">
+		#stage{
+			position: relative;
+			width: 750px;
+			height: 550px;
+			background: url("bg.png");
+			cursor: none;    /*取消鼠标箭头*/
+			user-select: none;
+		}
+		#form1 #score{
+				text-align: center;
+				border: none;
+				width: 110px;
+				position: absolute;
+				left: 230px;
+				top: 196px;
+				border: 1px solid red;
+			}
+		#remtime{
+				
+				text-align: center;
+				border: none;
+				
+				position: absolute;
+				width: 110px;
+				left: 485px;
+				top: 196px;
+				z-index: 999;
+				border: 1px solid red;
+			}
+		/*锤子样式*/
+		#hammer1{
+			position: absolute;
+			margin-top: -40px;
+			margin-left: -40px;
+			top: 0;
+			left: 0;
+			user-select: none;/*取消锤子选中状态*/
+			z-index: 999;
+		}
+		/*最终得分区域*/
+			#pointarea{
+				color: white;
+				font-size: 40px;
+				font-family: 黑体;
+				position: absolute;
+				left: 400px;
+				top: 295px;
+			}
+
+		div[id^="hollow"]{
+			width: 100px;
+			height: 100px;
+			overflow: hidden;
+			position: absolute;
+		}
+		#hollow1{
+			top: 160px;
+			left: 140px;
+		}
+		#hollow2{
+			top: 160px;
+			left: 330px;
+		}
+		#hollow3{
+			top: 160px;
+			left: 530px;
+		}
+		#hollow4{
+			top: 250px;
+			left: 120px;
+		}
+		#hollow5{
+			top: 250px;
+			left: 335px;
+		}
+		#hollow6{
+			top: 250px;
+			left: 530px;
+		}
+		#hollow7{
+			top: 340px;
+			left: 110px;
+		}
+		#hollow8{
+			top: 350px;
+			left: 340px;
+		}
+		#hollow9{
+			top: 350px;
+			left: 550px;
+		}
+		div[id^="hollow"] img{
+			position: absolute;
+			top: 100px;
+			left: 0;
+			
+		}
+	</style>
+</head>
+<body>
+<div id="stage">
+	<img src="hammer1.png" id="hammer1">
+	<form id="form1" name="form1" style="margin-top: auto 0;">           
+        <input type="text" name="score" id="score" value="0">            
+        <input type="text" name="remtime" id="remtime" value="20">
+    </form>
+	<div id="hollow1"><img src="mouse1.png"></div>
+	<div id="hollow2"><img src="mouse1.png"></div>
+	<div id="hollow3"><img src="mouse1.png"></div>
+	<div id="hollow4"><img src="mouse1.png"></div>
+	<div id="hollow5"><img src="mouse1.png"></div>
+	<div id="hollow6"><img src="mouse1.png"></div>
+	<div id="hollow7"><img src="mouse1.png"></div>
+	<div id="hollow8"><img src="mouse1.png"></div>
+	<div id="hollow9"><img src="mouse1.png"></div>
+	<audio id="audio" src="audio/game_music.ogg" autoplay="autoplay" loop="loop"  ></audio>
+</div>
+
+
+<script type="text/javascript">
+	var stage=document.getElementById("stage");
+	var hammer=document.getElementById("hammer1");			
+   //倒计时
+  	var a = 20;
+    var tt;
+    function GameStart(){
+        document.getElementById("remtime").value=a;
+        if(a>0){
+            a--;
+        }else{
+            document.getElementById("remtime").innerHTML='倒计时结束';
+        }
+        tt = setTimeout("remtime()",1000);   
+    }
+    function remtime(){
+        clearTimeout(tt);
+    }setInterval(GameStart,1000);
+	
+	//鼠标移动锤子也跟着移动
+	stage.onmousemove=function(e){
+		var x=e.clientX;
+		var y=e.clientY;
+		hammer.style.left=x+"px";
+		hammer.style.top=y+"px";
+	}
+	//鼠标按下锤子的变化
+	stage.onmousedown=function(){
+		hammer.src="hammer2.png";
+	}
+	//鼠标松开锤子回到初始状态的样式
+	stage.onmouseup=function(){
+		hammer.src="hammer1.png";
+	}
+			
+    //鼠标双击	
+    var score=0;//得分
+	stage.onclick=function(e){
+		//鼠标的位置
+        var x=e.clientX;
+        var y=e.clientY;
+        console.log();
+        //碰撞检测   鼠标的x和y位置是否在盛放老鼠的矩形之间
+        var imgX1=hollowAry[mouseID].offsetLeft+mouseAry[mouseID].offsetLeft;
+        var imgX2=imgX1+mouseAry[mouseID].offsetWidth;
+        var imgY1=hollowAry[mouseID].offsetTop+mouseAry[mouseID].offsetTop;
+        var imgY2=imgY1+mouseAry[mouseID].offsetHeight;
+		//如果砸中老鼠，老鼠的样式被切换并且分数加一
+        if(x>imgX1 && x<imgX2 && y>imgY1 && y<imgY2){
+    	mouseAry[mouseID].src="mouse2.png";        
+    	   score++; 	
+    	if(mouseLoop!=null){
+    		mouseAry[mouseID].style.top=maxHeight+"px";
+    	}  document.getElementById("score").value=score; 	
+    }
+}         
+    var mouseAry=[];
+	var hollowAry=[];
+	//遍历老鼠洞和老鼠
+	for(var i=0;i<9;i++){
+		hollowAry[i]=document.getElementById("hollow"+(i+1));
+		mouseAry[i]=hollowAry[i].getElementsByTagName("img")[0];
+	}
+	var mouseID=0;//当前老鼠的ID
+	var mouseLoop=null;
+	//每隔2000毫秒产生一次老鼠
+	setInterval(function(){
+		//每次只产生一个老鼠
+		if(mouseLoop==null){
+			mouseID=parseInt(Math.random()*9);//产生的老鼠是随机的
+			maxHeight=0;
+			nowHeight=100;
+			waitTime=0;
+			mouseAry[mouseID].src="mouse1.png";
+			mouseLoop=setInterval(mouseShow,30);
+		}
+	},2000);
+     var maxHeight=0;//最终高度
+     var nowHeight=100;//当前高度
+     var waitTime=0;
+     var waitMaxTime=1000;
+     //老鼠显示
+     function mouseShow(){
+	    if(nowHeight>maxHeight){
+		     nowHeight-=6;
+	    }
+	    if(nowHeight<maxHeight){
+		     nowHeight=maxHeight;
+	    }
+	    if(nowHeight==maxHeight){
+	    	 if(waitTime<waitMaxTime){
+			     waitTime+=30;
+		     }
+		     
+		     if(waitTime>=waitMaxTime){
+			     nowHeight=100;
+			     clearInterval(mouseLoop);
+			     mouseLoop=null;
+		     }
+	    }
+	    mouseAry[mouseID].style.top=nowHeight+"px";
+    }
+    
+</script>
+</body>
+</html>

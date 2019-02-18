@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>刮刮乐</title>
+	<style type="text/css">
+		canvas{			
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+	</style>
+</head>
+<body>
+ <canvas width="400" height="400" id="myCanvas"></canvas>
+ <script type="text/javascript">
+ 	var myCanvas=document.getElementById("myCanvas");
+ 	var ctx=myCanvas.getContext("2d");
+ 	var w=myCanvas.width;
+ 	var h=myCanvas.height;
+ 	var lastPos={};
+
+ 	function init(){
+ //生成一个随机数
+    var img=new Image();
+ 	var random=Math.random();
+ 	if(random<0.1){
+ 		img.src="./jiang.jpg";
+ 	}else{
+ 		img.src="./true.jpg";
+ 	}
+
+ 	//把图片加载完毕之后才能进行鼠标操作
+ 	img.onload=function(){
+        myCanvas.style.backgroundImage='url('+img.src+')'
+        //鼠标按下刮奖
+        myCanvas.addEventListener('mousedown',downFun);
+ 		
+        //画灰色蒙层
+ 		ctx.beginPath();
+ 		ctx.fillStyle="#aaa";
+ 		ctx.fillRect(0,0,w,h);
+        ctx.globalCompositeOperation='destination-out';//新旧像素合并方式，新像素把旧像素覆盖
+ 	}
+ 	}
+ 	init();
+ 	//鼠标按下
+ 	function downFun(e){
+ 		lastPos.x=e.clientX-myCanvas.offsetLeft;
+ 		lastPos.y=e.clientY-myCanvas.offsetTop;
+
+ 		ctx.beginPath();
+ 		ctx.beginPath();
+ 		ctx.arc(lastPos.x,lastPos.y,20,0,Math.PI*2);
+ 		ctx.closePath();
+ 		ctx.fill();
+
+ 		myCanvas.addEventListener('mousemove',moveFun);
+ 		document.body.addEventListener('mouseup',upFun);
+ 	}
+ 	//鼠标移动刮奖
+ 	function moveFun(e){
+ 		var x=e.clientX-myCanvas.offsetLeft;
+ 		var y=e.clientY-myCanvas.offsetTop;
+ 		//连接断点
+ 		ctx.beginPath();
+ 		ctx.moveTo(lastPos.x,lastPos.y);
+ 		ctx.lineTo(x,y);
+ 		ctx.lineWidth=40;
+ 		ctx.lineCap="round";
+ 		ctx.stroke();
+ 		lastPos.x=x;
+ 		lastPos.y=y;
+ 	}
+ 	//鼠标抬起
+   function upFun(){
+   	myCanvas.removeEventListener('mousemove',moveFun);
+   	myCanvas.removeEventListener('mouseup',upFun);
+   	clearCover();
+   }
+   //刮开70%以上自动显示全部图片
+   function clearCover(){
+      var imageData=ctx.getImageData(0,0,w,h);
+      var sum=0;
+      for(var i=0;i<imageData.data.length;i+=4){
+          if(imageData.data[i]==0){
+          	sum++;
+          }
+      }
+      if(sum>w*h*0.7){
+      	ctx.clearRect(0,0,w,h);
+      }
+   }
+ </script>
+</body> 
+</html>

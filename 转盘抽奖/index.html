@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>转盘抽奖</title>
+	<link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+	<table id="table">
+		<tr>
+	<td class="select"><img src="img/小米6.jpg"></td>
+	<td><img src="img/音箱.png"></td>
+	<td><img src="img/小米X.jpg"></td>
+	<td>重在参与</td>
+	<td><img src="img/小米手机.png"></td>
+</tr>
+<tr>
+	<td>很遗憾</td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td>再接再厉</td>
+</tr>
+<tr>
+	<td><img src="img/小米米加.jpg"></td>
+	<td></td>
+	<td id="start" class="start">开始</td>
+	<td></td>
+	<td><img src="img/无线开关.png"></td>
+</tr>
+<tr>
+	<td>勇敢的你</td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td>别灰心</td>
+</tr>
+<tr>
+	<td><img src="img/毛巾.png"></td>
+	<td>差一点~</td>
+	<td><img src="img/红米6.jpg"></td>
+	<td>还需努力</td>
+	<td><img src="img/路由器.jpg"></td>
+</tr>
+	</table>
+<script type="text/javascript">
+   var tdList=document.getElementById("table").getElementsByTagName("td"); 
+   var tdID=0;
+   var tdAry=[0,1,2,3,4,9,14,19,24,23,22,21,20,15,10,5];
+   var runNum;
+   var run;
+   var maxNum;
+   function playFunc(){
+   	tdList[tdAry[tdID]].className=" ";
+   	tdID=tdID+1>=tdAry.length?0:tdID+1;
+   	tdList[tdAry[tdID]].className="select";
+   	runNum++;
+   	if(runNum==6){
+   		clearInterval(run);
+   		run=setInterval(playFunc,20);
+   	}
+   	if(runNum+6==maxNum){
+   		clearInterval(run);
+   		run=setInterval(playFunc,200);
+   	}
+   	if(maxNum<=runNum){
+   		clearInterval(run);
+   		return;
+   	}
+   }
+var start=document.getElementById("start");
+clearInterval(run);
+start.onclick=function(){
+	//跑多少圈(跑三圈然后随机停在某个位置)
+	runNum=0;
+	clearInterval(run);
+	maxNum=16*3+parseInt(Math.random()*16);
+	run=setInterval(playFunc,200);
+}	
+</script>
+</body>
+</html>
+<script src="index.js"></script>

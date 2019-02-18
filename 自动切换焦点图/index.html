@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    .clearfix::after {
+			content: " ";
+			clear: both;
+		}
+		#left {
+			width: 140px;
+			float: left;
+			
+		}
+
+		#left img {
+			width: 140px;
+			height: 63px;
+			margin-top: 5px;
+		}
+
+		#right {
+			margin-left: 10px;
+			float: left;
+			width: 440px;
+			height: 300px;
+		}
+
+		#right img {
+			height: 300px;
+			width: 440px;
+        }
+
+		#pointer {
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: -1;
+		}
+
+		.box {
+			position: relative;
+		} 
+    </style>
+</head>
+<body>
+    <div class="box clearfix">
+		<div id="left">
+			<img src="1.jpg">
+			<img src="2.jpg">
+			<img src="3.jpg">
+			<img src="4.jpg">
+		</div>
+		<img src="pointer.png" id="pointer">
+		<div id="right">
+			<img src="1.jpg">
+		</div>
+    </div>
+    <script>
+        var leftImgAry = document.getElementById("left").getElementsByTagName("img");
+		var rightImgAry = document.getElementById("right").getElementsByTagName("img")[0];
+		var pointer = document.getElementById("pointer");
+		var TopAry = [0, 73, 145,215];
+        for(var i = 0;i<leftImgAry.length;i++){
+            leftImgAry[i].index = i;
+            leftImgAry[i].onmouseover = RightImgShow;
+            leftImgAry[i].onmouseleave = function(){
+                // 鼠标移开 初始num 等于左边当前的img的索引值
+                num = this.index;
+                // 开启定时器
+                imgLoop = setInterval(autoPlayImg,1000);
+            };
+        }
+        function RightImgShow(){
+            // 鼠标移入，停止定时器
+            clearInterval(imgLoop);
+            //定义leftImgSrc等于当前图片的路径
+            var leftImgSrc = leftImgAry[this.index].src;
+            // 将上面获取的src赋值给右边大图的路径
+            rightImgAry.src = leftImgSrc;
+            //pointer的top值为数组中当前图片索引值的所对应的参数
+            pointer.style.top = TopAry[this.index] + "px";
+        }
+
+
+        var imgLoop = setInterval(autoPlayImg,1000);
+        // 初始化num =0;
+        var num = 0;
+        function autoPlayImg(){
+            //定义leftImgSrc等于第num个图片的路径
+            var leftImgSrc = leftImgAry[num].src;
+            //将上面获取的leftImgSrc赋值给右边图片的src；
+            rightImgAry.src = leftImgSrc;
+             //pointer的top值等于数组中第num个值
+            pointer.style.top = TopAry[num] + "px";
+            //num累加
+            num++;
+            //当num值达到做左边图片的个数的时候，num = 0,从头开始
+            if(num>=leftImgAry.length){
+                num = 0;
+            }
+        }
+    </script>
+</body>
+</html>

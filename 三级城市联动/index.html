@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>三级城市联动</title>
+</head>
+<body>
+	<!--动态添加select选项-->
+	<select name="" id="province">	
+	</select>
+	<select name="" id="city">
+		
+	</select>
+	<select name="" id="dristrict">
+		
+	</select>
+
+
+
+	<script type="text/javascript">
+		var province=document.getElementById("province");
+		var city=document.getElementById("city");
+		var dristrict=document.getElementById("dristrict");
+
+		//创建元素
+		var provinceList=[
+		{name:"湖北省",
+		 cityList:[
+		 {name:"武汉市",dristrictList:["东城区","西城区"]},
+		 {name:"宜昌市",dristrictList:["密云县","延庆县"]}
+		],
+	    },
+	    {name:"安徽",
+		 cityList:[
+		 {name:"合肥市",dristrictList:["蜀山区","瑶海区"]},
+		 {name:"亳州市",dristrictList:["谯城区","南部新区"]}
+		],
+	    },
+	    {name:"浙江",
+		 cityList:[
+		 {name:"杭州市",dristrictList:["西湖区","上城区"]},
+		 {name:"宁波市",dristrictList:["鄞州区","象山"]}
+		],
+	    }
+	    ];
+		for(var i=0;i<provinceList.length;i++){
+			var option=new Option(provinceList[i].name,provinceList[i].name);
+			province.options.add(option);
+		}
+		//监听选中操作
+		province.onchange=changeProvince;
+		changeProvince();
+		changeCity();
+		function changeProvince(){
+			//清空option
+			city.options.length=0;
+			var cityAry=provinceList[province.selectedIndex].cityList;
+			for(var i=0;i<cityAry.length;i++){
+                 var option=new Option(cityAry[i].name,cityAry[i].name);
+                 city.options.add(option);
+			}
+		}
+		city.onchange=changeCity;
+		function changeCity(){
+			dristrict.options.length=0;
+			var dristrictAry=provinceList[province.selectedIndex].cityList[city.selectedIndex].dristrictList;
+			for(var i=0;i<dristrictAry.length;i++){
+				var option=new Option(dristrictAry[i],dristrictAry[i]);
+				dristrict.options.add(option);
+			}
+		}
+	</script>
+
+</body>
+</html>

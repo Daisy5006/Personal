@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>淘宝轮播图</title>
+	<link rel="stylesheet" type="text/css" href="./index.css">
+</head>
+<body>
+	<div class="wrapper">
+		<ul class="img-box">
+			<li><a href="javascript"><img src="./img/小米6.jpg"></a></li>
+			<li><a href="javascript"><img src="./img/小米6X.jpg"></a></li>
+			<li><a href="javascript"><img src="./img/小米手机.png"></a></li>
+			<li><a href="javascript"><img src="./img/小米米加.jpg"></a></li>
+			<li><a href="javascript"><img src="./img/无线开关.png"></a></li>
+			<li><a href="javascript"><img src="./img/红米6.jpg"></a></li>
+			<li><a href="javascript"><img src="./img/路由器.jpg"></a></li>
+			<li><a href="javascript"><img src="./img/音箱.png"></a></li>
+			<li><a href="javascript"><img src="./img/小米6.jpg"></a></li>
+		</ul>
+		<div class="btn">
+			<a href="javascript:" class="preBtn">&lt;</a>
+			<a href="javascript:" class="naxBtn">&gt;</a>
+		</div>
+		<div class="order">
+			<ul>
+				<li class="item active"></li>
+				<li class="item"></li>
+				<li class="item"></li>
+				<li class="item"></li>
+				<li class="item"></li>
+				<li class="item"></li>
+				<li class="item"></li>
+				<li class="item"></li>
+			</ul>
+		</div>
+	</div>
+<script src="jquery-3.3.1.js"></script>
+<script type="text/javascript">
+	var index=0;
+	var num=8;//共有8张图片
+	var itemWidth=300;//每一张图片的宽度
+	var timer=undefined;
+
+	function move(dirction){
+		clearTimeout(timer);
+		$(".img-box").stop(false,true);//立即执行完当前动画，使之迅速响应，避免出现鼠标移开还在执行的不良体验
+		if (dirction=="pre") {//点击“<”按钮向前滑动
+			index--;
+			//向前的无缝连接
+			if(index<0){
+				$(".img-box").css({
+					left:num*-itemWidth
+				});
+				index=7;
+			}
+		} else if(dirction=="nex"){//点击“>”按钮向右滑动
+			index++
+			//向后的无缝连接
+			if(index>num){
+				$('.img-box').css({
+					left:0
+				});
+				index=1;
+			}
+		}
+        $('.img-box').animate({
+			left:index*-itemWidth
+
+		},function(){//动画完成之后执行timerFun();
+			timerFun();
+		});
+		active($(".item").eq(index==8?0:index));//使圆点和随着轮播图片的变化而变化
+	}
+
+	function timerFun(){//每隔三秒自动轮播一次
+		timer=setTimeout(function(){
+           move("nex");
+		},3000);
+	}
+	function  active(dom){
+        $(".active").removeClass("active");
+        dom.addClass('active');
+
+	}
+	$('.preBtn').click(function(){
+        move("pre");
+	});
+	$('.naxBtn').click(function(){
+		move("nex");
+	});
+	$(".item").click(function(){
+		index=$(this).index();//点击圆点的时候找到对应图片的索引值	
+		move("");
+
+	})
+</script>
+</body>
+</html>

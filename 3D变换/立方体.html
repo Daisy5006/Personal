@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	.wrapper{
+		perspective: 600px;
+	}
+	.box{
+		position: relative;
+		transform-style: preserve-3d;
+		width: 200px;
+		height: 200px;
+		margin: 100px auto;
+		animation: move 5s linear infinite;/*无限次匀速运动*/
+	}
+		.item{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 200px;
+			height: 200px;
+			line-height: 200px;
+			text-align: center;
+			font-size: 30px;
+			color: #fff;
+			opacity: 0.5;
+		}
+		.item:nth-child(1){
+			background: green;
+			transform:translateZ(100px);
+		}
+		.item:nth-child(2){
+			background: green;
+			transform:rotateX(90deg) translateZ(100px);
+		}
+		.item:nth-child(3){
+			background: orange;
+			transform:rotateX(180deg) translateZ(100px);
+		}
+		.item:nth-child(4){
+			background: purple;
+			transform:rotateX(-90deg) translateZ(100px);
+		}
+		.item:nth-child(5){
+			background: blue;
+			transform:rotateY(90deg) translateZ(100px);
+		}
+		.item:nth-child(6){
+			background: salmon;
+			transform:rotateY(-90deg) translateZ(100px);
+			
+		}
+		@keyframes move{
+			0%{
+				transform:rotate3d(1,1,1,0) ;
+			}
+			100%{
+				transform:rotate3d(1,1,1,360deg);
+			}
+		}
+	</style>
+</head>
+<body>
+    <div class="wrapper">
+    	<div class="box">
+    		<div class="item">1</div>
+    		<div class="item">2</div>
+    		<div class="item">3</div>
+    		<div class="item">4</div>
+    		<div class="item">5</div>
+    		<div class="item">6</div>
+    	</div>
+    </div>
+</body>
+</html>
